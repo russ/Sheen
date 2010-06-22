@@ -12,8 +12,8 @@ class Server < EventMachine::Connection
   end
 
   def receive
-    # @request.headers.delete('Cookie')
-    # @request.headers.delete('Authorization')
+    @request.headers.delete('Cookie')
+    @request.headers.delete('Authorization')
 
     if @request.uri =~ /^\/admin/
       false
@@ -24,7 +24,6 @@ class Server < EventMachine::Connection
 
   def fetched
     @response.headers.delete('Set-Cookie')
-raise @response.inspect
   end
 
   def deliver

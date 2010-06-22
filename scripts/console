@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+libs = " -r irb/completion"
+libs = " -r #{File.join(File.dirname(__FILE__), '..', 'lib', 'sheen')}"
+
+exec "irb #{libs} --simple-prompt"
