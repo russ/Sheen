@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+require File.join(File.dirname(__FILE__), '..', 'lib', 'sheen')
+
+Sheen::CacheObject.destroy_all
+
+class Server < EventMachine::Connection
+  include Sheen::Server
+
+  def backends
+    [{ :host => 'www.apple.com', :port => 80 }]
+  end
+
+  def receive
+    # @request.headers.delete('Cookie')
+    # @request.headers.delete('Authorization')
+
+    if @request.uri =~ /^\/admin/
+      false
+    else
+      lookup
+    end
+  end
+
+  def fetched
+    @response.headers.delete('Set-Cookie')
+raise @response.inspect
+  end
+
+  def deliver
+    @response.headers['Cache-Control'] = 'private, max-age=0, must-revalidate'
+    @response.headers['Pragma'] = 'no-cache'
+    @response.headers['X-Cache'] = (@hit) ? 'HIT' : 'MISS'
+  end
+end
+
+EventMachine::run do
+  EventMachine::start_server('0.0.0.0', 6789, Sheen::Admin)
+  EventMachine::start_server('0.0.0.0', 9876, Server)
+end
