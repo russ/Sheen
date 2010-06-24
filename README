@@ -1,3 +1,16 @@
 Ruby port of Varnish.
 
-Work in progress.
+Ok, it's slow. Probably not worth it. But I'm leaving this code here for the hell of it.
+
+Some stats when testing a hello world sinatra app.
+
+ab -c 20 -n 1000 'http://127.0.0.1:*/'
+
+Directyl accessing the app:
+Requests per second:    557.17 [#/sec] (mean)
+
+Using Sheen:
+Requests per second:    887.52 [#/sec] (mean)
+
+Using Varnish:
+Requests per second:    5120.01 [#/sec] (mean)
